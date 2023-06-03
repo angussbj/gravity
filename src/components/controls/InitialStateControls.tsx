@@ -1,26 +1,52 @@
 import React, { ReactElement } from "react";
+import { Colors, NumberInput, VectorInput } from "ui";
+import { useUniverse } from "logic";
 import styled from "styled-components";
-import { Colors } from "ui";
-import { useWindowDimensions } from "utilities";
 
-export function Controls(): ReactElement {
-  const { height: windowHeight } = useWindowDimensions();
+export function InitialStateControls(): ReactElement {
+  const universe = useUniverse();
 
   return (
-    <ControlsContainer style={{ maxHeight: windowHeight - 32 }}>
-      <InitialStateControls />
-    </ControlsContainer>
+    <Container style={{ color: Colors.LIGHT.toString(), fontSize: 12 }}>
+      Initial state:
+      {universe.state.map((body, i) => {
+        return (
+          <BodyControlsContainer key={body.id}>
+            {body.name || `Body ${i + 1}`}
+            <VectorInput
+              label={"Position"}
+              value={body.x}
+              onSubmitOrBlur={universe.update}
+            />
+            <VectorInput
+              label={"Velocity"}
+              value={body.v}
+              onSubmitOrBlur={universe.update}
+            />
+            <NumberInput
+              label={"Mass"}
+              value={body.m}
+              onSubmitOrBlur={(val): void => {
+                universe.setInitialMass(body.id, val);
+                universe.update();
+              }}
+            />
+          </BodyControlsContainer>
+        );
+      })}
+    </Container>
   );
 }
 
-const ControlsContainer = styled.div`
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 240px;
-  min-height: 100px;
-  background-color: ${Colors.DARK.toString()};
-  border: 1px solid ${Colors.WHITE.toString()};
-  overflow-y: scroll;
-  scroll-behaviour: smooth;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const BodyControlsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 8px;
 `;

@@ -1,0 +1,14 @@
+.input {
+    padding: 4px;
+    background-color: #f7f9f9;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+}
+.input:hover {
+    border: 1px solid #aaaaaa;
+}
+.input:focus {
+    border: 1px solid #5577FF;
+    box-shadow: 0 0 0 1px #5577FF;
+    outline: 0 none;
+}
