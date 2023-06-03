@@ -8,9 +8,8 @@ export function Content(): ReactElement {
 
   return (
     <>
-      {universe.state.map((body, i) => (
-        // TODO: body ids
-        <Line key={i} points={body.path} />
+      {universe.state.map((body) => (
+        <Line key={body.id} points={body.path} color={body.color} />
       ))}
     </>
   );

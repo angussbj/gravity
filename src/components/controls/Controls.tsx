@@ -47,7 +47,7 @@ const ControlsContainer = styled.div`
   background-color: ${Colors.DARK.toString()};
   border: 1px solid ${Colors.LIGHT.toString()};
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   scroll-behaviour: smooth;
   padding: 12px;
   padding-bottom: 40px;

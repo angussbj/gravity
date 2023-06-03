@@ -8,8 +8,6 @@ import React, {
 import { TextField } from "./TextField";
 import { sanitiseNumericString } from "../utilities/sanitiseNumericString";
 import { Column } from "./Column";
-import styled from "styled-components";
-import { Colors } from "./colors";
 import { InputLabel } from "./InputLabel";
 
 interface Props {
@@ -51,8 +49,3 @@ export function NumberInput({
     </Column>
   );
 }
-
-const LabelContainer = styled.div`
-  color: ${Colors.LIGHT.toString()};
-  font-size: 10px;
-`;

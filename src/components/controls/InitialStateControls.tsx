@@ -1,7 +1,9 @@
 import React, { ReactElement } from "react";
-import { Colors, NumberInput, VectorInput } from "ui";
+import { Colors } from "ui";
 import { useUniverse } from "logic";
 import styled from "styled-components";
+import { BodyControls } from "./BodyControls";
+import { AddBodyButton } from "./AddBodyButton";
 
 export function InitialStateControls(): ReactElement {
   const universe = useUniverse();
@@ -11,29 +13,13 @@ export function InitialStateControls(): ReactElement {
       Initial state:
       {universe.state.map((body, i) => {
         return (
-          <BodyControlsContainer key={body.id}>
-            {body.name || `Body ${i + 1}`}
-            <VectorInput
-              label={"Position"}
-              value={body.x}
-              onSubmitOrBlur={universe.update}
-            />
-            <VectorInput
-              label={"Velocity"}
-              value={body.v}
-              onSubmitOrBlur={universe.update}
-            />
-            <NumberInput
-              label={"Mass"}
-              value={body.m}
-              onSubmitOrBlur={(val): void => {
-                universe.setInitialMass(body.id, val);
-                universe.update();
-              }}
-            />
-          </BodyControlsContainer>
+          <>
+            <BodyControls body={body} index={i} />
+            <Separator />
+          </>
         );
       })}
+      <AddBodyButton />
     </Container>
   );
 }
@@ -44,9 +30,9 @@ const Container = styled.div`
   gap: 16px;
 `;
 
-const BodyControlsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-left: 8px;
+const Separator = styled.div`
+  border-bottom: 1px solid ${Colors.LIGHT.fade(0.5).toString()};
+  align-self: stretch;
+  margin-left: 40px;
+  margin-right: 40px;
 `;
