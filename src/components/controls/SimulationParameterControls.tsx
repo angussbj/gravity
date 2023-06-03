@@ -11,7 +11,7 @@ export function SimulationParameterControls(): ReactElement {
       Path extrapolation parameters:
       <ControlsGroup>
         <NumberInput
-          label={"Pathing depth"}
+          label={"Step count"}
           value={universe.pathingDepth}
           onSubmitOrBlur={(val): void => {
             universe.pathingDepth = val;

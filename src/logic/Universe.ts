@@ -15,7 +15,6 @@ export class Universe {
   private bodyIdCounter = 0;
 
   constructor(private render: () => void) {
-    console.log("Constructing a universe");
     this.addBody({
       x0: new Vector3(0, 0, 0),
       v0: new Vector3(0, 0, -0.12),
