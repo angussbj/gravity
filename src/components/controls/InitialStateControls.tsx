@@ -14,8 +14,8 @@ export function InitialStateControls(): ReactElement {
       {universe.state.map((body, i) => {
         return (
           <>
-            <BodyControls body={body} index={i} />
-            <Separator />
+            <BodyControls body={body} index={i} key={body.id} />
+            <Separator key={body.id + "s"} />
           </>
         );
       })}

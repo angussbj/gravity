@@ -1,4 +1,4 @@
-import { NumberInput, Row, VectorInput } from "ui";
+import { ColorInput, NumberInput, Row, VectorInput } from "ui";
 import { TextInput } from "../../ui/TextInput";
 import React, { ReactElement } from "react";
 import styled from "styled-components";
@@ -14,7 +14,7 @@ export function BodyControls({ body, index }: Props): ReactElement {
   const universe = useUniverse();
 
   return (
-    <BodyControlsContainer key={body.id}>
+    <BodyControlsContainer>
       <Row style={{ justifyContent: "space-between" }}>
         <Row>
           <TextInput
@@ -26,7 +26,15 @@ export function BodyControls({ body, index }: Props): ReactElement {
               universe.render();
             }}
           />
-          <ColorSquare style={{ backgroundColor: body.color.toString() }} />
+          <ColorInput
+            label={"Color"}
+            value={body.color}
+            onChange={(newColor): void => {
+              body.color = newColor;
+              universe.setInitialColor(body.id, newColor);
+              universe.render();
+            }}
+          />
         </Row>
         <RemoveBodyButton bodyId={body.id} />
       </Row>
@@ -43,8 +51,8 @@ export function BodyControls({ body, index }: Props): ReactElement {
       <NumberInput
         label={"Mass"}
         value={body.m}
-        onSubmitOrBlur={(val): void => {
-          universe.setInitialMass(body.id, val);
+        onSubmitOrBlur={(newMass): void => {
+          universe.setInitialMass(body.id, newMass);
           universe.update();
         }}
       />
@@ -57,11 +65,4 @@ const BodyControlsContainer = styled.div`
   flex-direction: column;
   gap: 4px;
   margin-left: 8px;
-`;
-
-const ColorSquare = styled.div`
-  width: 12px;
-  height: 12px;
-  margin-top: 10px;
-  margin-left: 12px;
 `;

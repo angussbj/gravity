@@ -2,6 +2,7 @@ import { Body, BodyParameters } from "./Body";
 import { Vector3 } from "three";
 import autoBind from "auto-bind";
 import { Colors } from "ui";
+import Color from "color";
 
 const G = 1;
 
@@ -54,13 +55,18 @@ export class Universe {
   }
 
   public setInitialMass(bodyId: string, mass: number): void {
-    const body = this.state0.find((b) => b.id == bodyId);
+    const body = this.state0.find((b) => b.id === bodyId);
     if (body) body.m = mass;
   }
 
   public setInitialName(bodyId: string, name: string): void {
-    const body = this.state0.find((b) => b.id == bodyId);
+    const body = this.state0.find((b) => b.id === bodyId);
     if (body) body.name = name;
+  }
+
+  public setInitialColor(bodyId: string, color: Color): void {
+    const body = this.state0.find((b) => b.id === bodyId);
+    if (body) body.color = color;
   }
 
   public update(): void {
@@ -94,11 +100,7 @@ export class Universe {
         for (let j = i + 1; j < bodies.length; j++) {
           V.copy(bodies[j].x).sub(bodies[i].x); // vector from bi to bj
           r = V.length();
-          if (r == 0) continue;
-          // if (r < 0.01 && bodies[i].m * bodies[j].m > 0) {
-          //   console.log("COLLISION!");
-          //   return;
-          // }
+          if (r == 0) continue; // TODO: better collision handling
 
           k = (this.pathingStepSize * G) / (r * r);
           V.normalize().multiplyScalar(k * bodies[j].m); // dvi
