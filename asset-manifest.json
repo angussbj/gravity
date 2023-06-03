@@ -1,20 +1,20 @@
 {
   "files": {
     "main.css": "/gravity/static/css/main.ce810c5f.chunk.css",
-    "main.js": "/gravity/static/js/main.d696813f.chunk.js",
-    "main.js.map": "/gravity/static/js/main.d696813f.chunk.js.map",
+    "main.js": "/gravity/static/js/main.826c265e.chunk.js",
+    "main.js.map": "/gravity/static/js/main.826c265e.chunk.js.map",
     "runtime-main.js": "/gravity/static/js/runtime-main.8887eda1.js",
     "runtime-main.js.map": "/gravity/static/js/runtime-main.8887eda1.js.map",
-    "static/js/2.a353851a.chunk.js": "/gravity/static/js/2.a353851a.chunk.js",
-    "static/js/2.a353851a.chunk.js.map": "/gravity/static/js/2.a353851a.chunk.js.map",
+    "static/js/2.a975686a.chunk.js": "/gravity/static/js/2.a975686a.chunk.js",
+    "static/js/2.a975686a.chunk.js.map": "/gravity/static/js/2.a975686a.chunk.js.map",
     "index.html": "/gravity/index.html",
     "static/css/main.ce810c5f.chunk.css.map": "/gravity/static/css/main.ce810c5f.chunk.css.map",
-    "static/js/2.a353851a.chunk.js.LICENSE.txt": "/gravity/static/js/2.a353851a.chunk.js.LICENSE.txt"
+    "static/js/2.a975686a.chunk.js.LICENSE.txt": "/gravity/static/js/2.a975686a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.8887eda1.js",
-    "static/js/2.a353851a.chunk.js",
+    "static/js/2.a975686a.chunk.js",
     "static/css/main.ce810c5f.chunk.css",
-    "static/js/main.d696813f.chunk.js"
+    "static/js/main.826c265e.chunk.js"
   ]
 }
