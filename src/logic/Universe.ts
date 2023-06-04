@@ -109,6 +109,9 @@ export class Universe {
       O.setLength(0);
       mTotal = 0;
       for (let i = 0; i < bodies.length; i++) {
+        V.copy(bodies[i].v).multiplyScalar(this.pathingStepSize); // dxi
+        bodies[i].x.add(V);
+
         if (this.state[i].frameFollows) {
           O.add(bodies[i].x.clone().multiplyScalar(bodies[i].m));
           mTotal += bodies[i].m;
@@ -117,9 +120,6 @@ export class Universe {
       if (mTotal !== 0) O.divideScalar(mTotal);
 
       for (let i = 0; i < bodies.length; i++) {
-        V.copy(bodies[i].v).multiplyScalar(this.pathingStepSize); // dxi
-        bodies[i].x.add(V);
-
         this.state[i].path.push(bodies[i].x.clone().sub(O));
       }
     }
