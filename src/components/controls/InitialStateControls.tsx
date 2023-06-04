@@ -15,11 +15,11 @@ export function InitialStateControls(): ReactElement {
         return (
           <>
             <BodyControls body={body} index={i} key={body.id} />
-            <Separator key={body.id + "s"} />
+            <Separator key={body.id + "separator"} />
           </>
         );
       })}
-      <AddBodyButton />
+      <AddBodyButton key={"add_body"} />
     </Container>
   );
 }

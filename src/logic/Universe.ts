@@ -2,7 +2,6 @@ import { Body, BodyParameters } from "./Body";
 import { Vector3 } from "three";
 import autoBind from "auto-bind";
 import { Colors } from "ui";
-import Color from "color";
 
 const G = 1;
 
@@ -37,14 +36,14 @@ export class Universe {
     autoBind(this);
   }
 
-  public addBody(parameters?: Omit<BodyParameters, "id" | "color">): void {
+  public addBody(parameters?: Omit<Partial<BodyParameters>, "id">): void {
     this.state0.push({
+      x0: new Vector3(0, 0, 0),
+      v0: new Vector3(0, 0, 0),
+      m: 0,
       color: Colors.random(),
-      ...(parameters || {
-        x0: new Vector3(0, 0, 0),
-        v0: new Vector3(0, 0, 0),
-        m: 0,
-      }),
+      frameFollows: false,
+      ...parameters,
       id: `b${this.bodyIdCounter}`,
     });
     this.bodyIdCounter += 1;
@@ -54,19 +53,13 @@ export class Universe {
     this.state0 = this.state0.filter((b) => b.id !== bodyId);
   }
 
-  public setInitialMass(bodyId: string, mass: number): void {
+  public setInitial<K extends keyof BodyParameters>(
+    field: K,
+    bodyId: string,
+    value: BodyParameters[K]
+  ): void {
     const body = this.state0.find((b) => b.id === bodyId);
-    if (body) body.m = mass;
-  }
-
-  public setInitialName(bodyId: string, name: string): void {
-    const body = this.state0.find((b) => b.id === bodyId);
-    if (body) body.name = name;
-  }
-
-  public setInitialColor(bodyId: string, color: Color): void {
-    const body = this.state0.find((b) => b.id === bodyId);
-    if (body) body.color = color;
+    if (body) body[field] = value;
   }
 
   public update(): void {
@@ -80,7 +73,7 @@ export class Universe {
       ...body,
       x: body.x0,
       v: body.v0,
-      path: [body.x0],
+      path: [],
     }));
   }
 
@@ -95,6 +88,8 @@ export class Universe {
     let k: number;
     let r: number;
     const V = new Vector3(0, 0, 0);
+    const O = new Vector3(0, 0, 0);
+    let mTotal: number;
     for (let step = 0; step < this.pathingDepth; step++) {
       for (let i = 0; i < bodies.length; i++) {
         for (let j = i + 1; j < bodies.length; j++) {
@@ -110,11 +105,22 @@ export class Universe {
         }
       }
 
+      // Find current center of mass of bodies that the frame follows
+      O.setLength(0);
+      mTotal = 0;
+      for (let i = 0; i < bodies.length; i++) {
+        if (this.state[i].frameFollows) {
+          O.add(bodies[i].x.clone().multiplyScalar(bodies[i].m));
+          mTotal += bodies[i].m;
+        }
+      }
+      if (mTotal !== 0) O.divideScalar(mTotal);
+
       for (let i = 0; i < bodies.length; i++) {
         V.copy(bodies[i].v).multiplyScalar(this.pathingStepSize); // dxi
         bodies[i].x.add(V);
 
-        this.state[i].path.push(bodies[i].x.clone());
+        this.state[i].path.push(bodies[i].x.clone().sub(O));
       }
     }
   }

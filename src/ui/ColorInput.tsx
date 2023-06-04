@@ -50,7 +50,10 @@ export function ColorInput({
   return (
     <Column style={style}>
       <InputLabel label={label} />
-      <IconButton onClick={(): void => setOpen((o) => !o)}>
+      <IconButton
+        onClick={(): void => setOpen((o) => !o)}
+        style={{ marginBottom: -8, marginTop: -4, marginLeft: -4 }}
+      >
         <ColorSquare style={{ backgroundColor: value.toString() }} />
       </IconButton>
 

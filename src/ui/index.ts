@@ -1,4 +1,5 @@
 export * from "./colors";
+export * from "./CheckboxInput";
 export * from "./ColorInput";
 export * from "./TextField";
 export * from "./VectorInput";

@@ -8,6 +8,7 @@ export interface BodyParameters {
   x0: Vector3;
   v0: Vector3;
   m: number;
+  frameFollows: boolean;
 }
 
 export interface Body extends BodyParameters {

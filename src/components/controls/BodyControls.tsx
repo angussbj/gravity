@@ -1,9 +1,10 @@
-import { ColorInput, NumberInput, Row, VectorInput } from "ui";
+import { CheckboxInput, ColorInput, NumberInput, Row, VectorInput } from "ui";
 import { TextInput } from "../../ui/TextInput";
 import React, { ReactElement } from "react";
 import styled from "styled-components";
 import { Body, useUniverse } from "logic";
 import { RemoveBodyButton } from "./RemoveBodyButton";
+import { Tooltip } from "@material-ui/core";
 
 interface Props {
   body: Body;
@@ -16,13 +17,13 @@ export function BodyControls({ body, index }: Props): ReactElement {
   return (
     <BodyControlsContainer>
       <Row style={{ justifyContent: "space-between" }}>
-        <Row>
+        <Row style={{ gap: 4 }}>
           <TextInput
             label={"Name"}
             value={body.name ?? `Body ${index + 1}`}
             onChange={(newName): void => {
               body.name = newName;
-              universe.setInitialName(body.id, newName);
+              universe.setInitial("name", body.id, newName);
               universe.render();
             }}
           />
@@ -31,7 +32,7 @@ export function BodyControls({ body, index }: Props): ReactElement {
             value={body.color}
             onChange={(newColor): void => {
               body.color = newColor;
-              universe.setInitialColor(body.id, newColor);
+              universe.setInitial("color", body.id, newColor);
               universe.render();
             }}
           />
@@ -48,14 +49,34 @@ export function BodyControls({ body, index }: Props): ReactElement {
         value={body.v}
         onSubmitOrBlur={universe.update}
       />
-      <NumberInput
-        label={"Mass"}
-        value={body.m}
-        onSubmitOrBlur={(newMass): void => {
-          universe.setInitialMass(body.id, newMass);
-          universe.update();
-        }}
-      />
+      <Row style={{ gap: 4 }}>
+        <NumberInput
+          label={"Mass"}
+          value={body.m}
+          onSubmitOrBlur={(newMass): void => {
+            universe.setInitial("m", body.id, newMass);
+            universe.update();
+          }}
+        />
+        <Tooltip
+          title={
+            "The frame of reference follows the center of mass of selected bodies"
+          }
+          enterDelay={600}
+          enterNextDelay={400}
+        >
+          <div>
+            <CheckboxInput
+              label={"Frame"}
+              value={body.frameFollows}
+              onChange={(val): void => {
+                universe.setInitial("frameFollows", body.id, val);
+                universe.update();
+              }}
+            />
+          </div>
+        </Tooltip>
+      </Row>
     </BodyControlsContainer>
   );
 }

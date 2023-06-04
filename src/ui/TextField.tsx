@@ -42,7 +42,7 @@ export function TextField({
       style={{
         flex: 1,
         backgroundColor: Colors.DARK.toString(),
-        borderColor: Colors.LIGHT.fade(0.5).toString(),
+        borderColor: Colors.LIGHT_GREY.toString(),
         color: Colors.LIGHT.toString(),
         ...style,
       }}

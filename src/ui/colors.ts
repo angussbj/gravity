@@ -4,6 +4,7 @@ import { random } from "utilities";
 export const Colors = {
   BLACK: Color("#000000"),
   DARK: Color("#101113"),
+  LIGHT_GREY: Color("#8C8D8F"),
   LIGHT: Color("#DCDDDF"),
   WHITE: Color("#FFFFFF"),
   random: (): Color =>
