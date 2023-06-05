@@ -22,7 +22,7 @@ export function BodyControls({ body, index }: Props): ReactElement {
             label={"Name"}
             value={body.name ?? `Body ${index + 1}`}
             onChange={(newName): void => {
-              body.name = newName;
+              body.name = newName.replace(/[_*]/, "");
               universe.setInitial("name", body.id, newName);
               universe.render();
             }}
