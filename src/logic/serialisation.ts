@@ -22,7 +22,7 @@ export function parseBodyParametersFromString(input: string): BodyParameters {
   const parts = input.split("_");
   return {
     id: parts[0],
-    name: parts[1],
+    name: parts[1] || undefined,
     color: Color(parts[2]),
     x0: new Vector3(
       parseFloat(parts[3]),

@@ -10,6 +10,8 @@ import {
   parseNullableFloat,
 } from "./serialisation";
 import { examples } from "./examples";
+import { Pather } from "./Pather";
+import { isPresent } from "ts-is-present";
 
 const G = 1;
 
@@ -82,9 +84,9 @@ export class Universe {
       this.setInitialStateFromString(examples[0].stateString);
     this.pathingStepSize = parseNullableFloat(
       params.get("pathingStepSize"),
-      0.001
+      0.0003
     );
-    this.pathingDepth = parseNullableFloat(params.get("pathingDepth"), 5000);
+    this.pathingDepth = parseNullableFloat(params.get("pathingDepth"), 100000);
   }
 
   public update(): void {
@@ -104,75 +106,15 @@ export class Universe {
   }
 
   private calculatePaths(): void {
-    // TODO: better algorithms - do some maths about how the field evolves
-    // TODO: turn this into a class so we can re-use variables without one giant function
-    // TODO: adaptive step size
-    const ZERO = new Vector3(0, 0, 0);
-    const bodies = this.state.map((b) => ({
-      x: b.x.clone(),
-      v: b.v.clone(),
-      m: b.m,
-      dx: new Vector3(0, 0, 0),
-      dv: new Vector3(0, 0, 0),
-    }));
-    let k: number;
-    let r: number;
-    const V = new Vector3(0, 0, 0);
-    const O = new Vector3(0, 0, 0);
-    let mTotal: number;
-    let maxDx: number;
-    let timeStep = this.pathingStepSize;
-
-    for (let step = 0; step < this.pathingDepth; step++) {
-      for (let i = 0; i < bodies.length; i++) {
-        bodies[i].dx.copy(ZERO);
-        bodies[i].dv.copy(ZERO);
-      }
-
-      // Build dv for each body from all the forces between pairs of bodies
-      for (let i = 0; i < bodies.length; i++) {
-        for (let j = i + 1; j < bodies.length; j++) {
-          V.copy(bodies[j].x).sub(bodies[i].x); // vector from bi to bj
-          r = V.length();
-          if (r == 0) continue; // TODO: better collision handling
-
-          k = (timeStep * G) / (r * r);
-          V.normalize().multiplyScalar(k * bodies[j].m); // dvi
-          bodies[i].dv.add(V);
-          V.normalize().multiplyScalar(-k * bodies[i].m); // dvj
-          bodies[j].dv.add(V);
-        }
-      }
-
-      O.setLength(0); // This will become center of mass of followed bodies
-      mTotal = 0;
-      maxDx = 0; // To check our step isn't too big
-      for (let i = 0; i < bodies.length; i++) {
-        V.copy(bodies[i].v).multiplyScalar(timeStep); // dxi
-        bodies[i].dx.add(V);
-
-        maxDx = Math.max(bodies[i].dx.length(), maxDx);
-
-        if (this.state[i].frameFollows) {
-          O.add(bodies[i].x.clone().multiplyScalar(bodies[i].m));
-          mTotal += bodies[i].m;
-        }
-      }
-      if (mTotal !== 0) O.divideScalar(mTotal);
-
-      // either adjust the timestep or record the changes
-      if (
-        maxDx > this.pathingStepSize * 2 ||
-        maxDx < this.pathingStepSize / 2
-      ) {
-        timeStep *= this.pathingStepSize / maxDx;
-      } else {
-        for (let i = 0; i < bodies.length; i++) {
-          bodies[i].v.add(bodies[i].dv);
-          bodies[i].x.add(bodies[i].dx);
-          this.state[i].path.push(bodies[i].x.clone().sub(O));
-        }
-      }
-    }
+    new Pather(this.state0, this.pathingStepSize, G)
+      .path(this.pathingDepth)
+      .getPaths(
+        this.state0
+          .map((body, i) => (body.frameFollows ? i : undefined))
+          .filter(isPresent)
+      )
+      .forEach((path, i) => {
+        this.state[i].path = path;
+      });
   }
 }
