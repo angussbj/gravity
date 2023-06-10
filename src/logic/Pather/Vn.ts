@@ -1,97 +1,86 @@
 import { BodyParameters } from "../Body";
 import { Vector3 } from "three";
 
-export class System {
-  points: Point[];
+export class Vn {
+  points: Vector3[];
   V = ZERO.clone();
 
   constructor(public length: number) {
     this.points = [];
     for (let i = 0; i < length; i++) {
-      this.points.push([ZERO.clone(), ZERO.clone()]);
+      this.points.push(ZERO.clone());
     }
   }
 
-  setVelocityToZero(): void {
+  setToZero(): void {
     for (let i = 0; i < this.points.length; i++) {
-      this.points[i][1].copy(ZERO);
+      this.points[i].copy(ZERO);
     }
   }
 
-  setFrom(bodies: BodyParameters[]): this {
+  setFrom(bodies: BodyParameters[], key: "x0" | "v0"): this {
     if (this.points.length < bodies.length)
       throw new Error(
         `This system has size ${this.points.length} so cannot hold ${bodies.length} points`
       );
 
     for (let i = 0; i < bodies.length; i++) {
-      this.points[i][0].copy(bodies[i].x0);
-      this.points[i][1].copy(bodies[i].v0);
+      this.points[i].copy(bodies[i][key]);
     }
     return this;
   }
 
-  copy(other: System): this {
+  copy(other: Vn): this {
     if (this.points.length < other.points.length)
       throw new Error(
         `This system has size ${this.points.length} so cannot hold ${other.points.length} points`
       );
 
     for (let i = 0; i < other.points.length; i++) {
-      this.points[i][0].copy(other.points[i][0]);
-      this.points[i][1].copy(other.points[i][1]);
+      this.points[i].copy(other.points[i]);
     }
     return this;
   }
 
-  add(other: System): this {
+  add(other: Vn): this {
     if (this.points.length != other.points.length)
       throw new Error(
         `Systems of different size cannot be added. This size: ${this.points.length}. Other size: ${other.points.length}`
       );
 
     for (let i = 0; i < this.points.length; i++) {
-      this.points[i][0].add(other.points[i][0]);
-      this.points[i][1].add(other.points[i][1]);
+      this.points[i].add(other.points[i]);
     }
     return this;
   }
 
-  addMultiple(other: System, scalar: number): this {
+  addMultiple(other: Vn, scalar: number): this {
     if (this.points.length != other.points.length)
       throw new Error(
         `Systems of different size cannot be added. This size: ${this.points.length}. Other size: ${other.points.length}`
       );
 
     for (let i = 0; i < this.points.length; i++) {
-      this.points[i][0].add(
-        this.V.copy(other.points[i][0]).multiplyScalar(scalar)
-      );
-      this.points[i][1].add(
-        this.V.copy(other.points[i][1]).multiplyScalar(scalar)
-      );
+      this.points[i].add(this.V.copy(other.points[i]).multiplyScalar(scalar));
     }
     return this;
   }
 
   times(scalar: number): this {
     for (let i = 0; i < this.points.length; i++) {
-      this.points[i][0].multiplyScalar(scalar);
-      this.points[i][1].multiplyScalar(scalar);
+      this.points[i].multiplyScalar(scalar);
     }
     return this;
   }
 
-  maxVelocity(): number {
+  maxLength(): number {
     if (this.points.length === 0) return 0;
-    let result = this.points[0][1].length();
+    let result = this.points[0].length();
     for (let i = 0; i < this.points.length; i++) {
-      result = Math.max(result, this.points[i][1].length());
+      result = Math.max(result, this.points[i].length());
     }
     return result;
   }
 }
-
-type Point = [Vector3, Vector3]; // position and velocity
 
 const ZERO = new Vector3(0, 0, 0);
